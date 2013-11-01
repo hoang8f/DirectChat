@@ -1,0 +1,14 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F0F0">
+
+    <ListView xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/list_friend_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:choiceMode="singleChoice"
+        android:dividerHeight="0dp"
+        android:background="#F0F0F0"
+        tools:context="info.hoang8f.directchat.NavigationDrawerFragment" />
+</LinearLayout>

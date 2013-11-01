@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger>
+
+    <dataSet config="main" >
+        <source path="C:\Users\Le Van Hoang\Desktop\projects\DirectChat\DirectChat\libs\extras\PullToRefreshListFragment\res" >
+            <file
+                name="need_this_for_maven"
+                path="C:\Users\Le Van Hoang\Desktop\projects\DirectChat\DirectChat\libs\extras\PullToRefreshListFragment\res\layout\need_this_for_maven.xml"
+                qualifiers=""
+                type="layout" />
+        </source>
+        <source path="C:\Users\Le Van Hoang\Desktop\projects\DirectChat\DirectChat\libs\extras\PullToRefreshListFragment\build\res\rs\release" />
+    </dataSet>
+    <dataSet config="release" >
+        <source path="C:\Users\Le Van Hoang\Desktop\projects\DirectChat\DirectChat\libs\extras\PullToRefreshListFragment\build-types\release\res" />
+    </dataSet>
+
+</merger>
