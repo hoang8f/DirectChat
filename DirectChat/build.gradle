@@ -27,4 +27,5 @@ dependencies {
 //    compile project("libs:PullToRefresh")
 //    compile project("libs:extras:PullToRefreshListFragment")
 //    compile project("libs:extras:PullToRefreshViewPager")
+    compile files('./libs/JadeAndroid.jar')
 }

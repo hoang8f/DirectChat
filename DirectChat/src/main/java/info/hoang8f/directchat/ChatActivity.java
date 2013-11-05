@@ -4,9 +4,13 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,12 +21,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import jade.android.AgentContainerHandler;
+import jade.android.RuntimeCallback;
+import jade.android.RuntimeService;
+import jade.android.RuntimeServiceBinder;
+
 public class ChatActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     public static final String TAG = "ChatActivity";
     private WifiP2pManager mWifiP2pManager;
     private WifiP2pManager.Channel mChannel;
+    private RuntimeServiceBinder runtimeServiceBinder;
+    private AgentContainerHandler mainContainerHandler;
+    private ServiceConnection serviceConnection;
+
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -46,6 +59,9 @@ public class ChatActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        //Start JADE main container
+        bindService();
 
         mWifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         if (mWifiP2pManager != null) {
@@ -171,6 +187,49 @@ public class ChatActivity extends Activity
             ((ChatActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
+    }
+    /**
+     * Create JADE Main Container here
+     */
+    private void bindService() {
+        //Check runtime service
+        if (runtimeServiceBinder == null) {
+            //Create Runtime Service Binder here
+            serviceConnection = new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName componentName, IBinder service) {
+                    runtimeServiceBinder = (RuntimeServiceBinder) service;
+                    Log.i(TAG, "###Gateway successfully bound to RuntimeService");
+                    startMainContainer();
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName componentName) {
+                    Log.i(TAG, "###Gateway unbound from RuntimeService");
+                }
+            };
+            Log.i(TAG, "###Binding Gateway to RuntimeService...");
+            bindService(new Intent(getApplicationContext(), RuntimeService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+        } else {
+            startMainContainer();
+        }
+    }
+
+    private void startMainContainer() {
+        runtimeServiceBinder.createMainAgentContainer(new RuntimeCallback<AgentContainerHandler>() {
+            @Override
+            public void onSuccess(AgentContainerHandler agentContainerHandler) {
+                mainContainerHandler = agentContainerHandler;
+                Log.i(TAG, "###Main-Container created...");
+                Log.i(TAG, "###Container:" + agentContainerHandler.getAgentContainer().getName());
+                Log.i(TAG, "###mainContainerHandler:" + mainContainerHandler);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                Log.i(TAG, "###Failed to create Main Container");
+            }
+        });
     }
 
 }
