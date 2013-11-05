@@ -202,8 +202,15 @@ public class ChatActivity extends Activity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        item.setChecked(true);
         switch (item.getItemId()) {
-            case R.id.action_settings:
+            case R.id.menu_choice_1:
+                return true;
+            case R.id.menu_choice_2:
+                return true;
+            case R.id.menu_choice_3:
+                return true;
+            case R.id.menu_choice_4:
                 return true;
         }
         return super.onOptionsItemSelected(item);

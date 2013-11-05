@@ -265,8 +265,8 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         switch (item.getItemId()) {
-            case R.id.action_example:
-                Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
+            case R.id.action_reload:
+                Toast.makeText(getActivity(), "Reload devices list", Toast.LENGTH_SHORT).show();
                 return true;
         }
 
