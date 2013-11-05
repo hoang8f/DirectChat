@@ -22,6 +22,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
@@ -58,6 +60,26 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
+    public ArrayList<String> getListDevices() {
+        return listDevices;
+    }
+
+    public void setListDevices(ArrayList<String> listDevices) {
+        this.listDevices = listDevices;
+    }
+
+    private ArrayList<String> listDevices= new ArrayList<String>();
+
+    public ArrayAdapter<String> getDevicesAdapter() {
+        return devicesAdapter;
+    }
+
+    public void setDevicesAdapter(ArrayAdapter<String> devicesAdapter) {
+        this.devicesAdapter = devicesAdapter;
+    }
+
+    private ArrayAdapter<String> devicesAdapter;
+
     public NavigationDrawerFragment() {
     }
 
@@ -93,15 +115,14 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
+        listDevices.add("foo");
+        listDevices.add("bar");
+        devicesAdapter = new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
-                new String[]{
-                        getString(R.string.title_section1),
-                        getString(R.string.title_section2),
-                        getString(R.string.title_section3),
-                }));
+                listDevices);
+        mDrawerListView.setAdapter(devicesAdapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return view;
     }
@@ -250,6 +271,17 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void refreshListDevice(ArrayList<String> peer) {
+        listDevices.clear();
+        listDevices.addAll(peer);
+        devicesAdapter.notifyDataSetChanged();
+        mDrawerListView.invalidate();
+    }
+
+    public ListView getDrawerListView() {
+        return mDrawerListView;
     }
 
     /**

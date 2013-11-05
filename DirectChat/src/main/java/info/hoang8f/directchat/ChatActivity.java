@@ -7,8 +7,11 @@ import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.widget.DrawerLayout;
@@ -19,7 +22,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import jade.android.AgentContainerHandler;
 import jade.android.RuntimeCallback;
@@ -35,6 +40,8 @@ public class ChatActivity extends Activity
     private RuntimeServiceBinder runtimeServiceBinder;
     private AgentContainerHandler mainContainerHandler;
     private ServiceConnection serviceConnection;
+    private final IntentFilter intentFilter = new IntentFilter();
+    private WiFiDirectBroadcastReceiver receiver;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -63,6 +70,7 @@ public class ChatActivity extends Activity
         //Start JADE main container
         bindService();
 
+        /*
         mWifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         if (mWifiP2pManager != null) {
             mChannel = mWifiP2pManager.initialize(this, this.getMainLooper(), null);
@@ -89,6 +97,60 @@ public class ChatActivity extends Activity
                         }
                     });
         }
+        */
+
+        //  Indicates a change in the Wi-Fi P2P status.
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+
+        // Indicates a change in the list of available peers.
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+
+        // Indicates the state of Wi-Fi P2P connectivity has changed.
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+
+        // Indicates this device's details have changed.
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+
+        mWifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        mChannel = mWifiP2pManager.initialize(this, getMainLooper(), null);
+
+        mWifiP2pManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+
+            @Override
+            public void onSuccess() {
+                // Code for when the discovery initiation is successful goes here.
+                // No services have actually been discovered yet, so this method
+                // can often be left blank.  Code for peer discovery goes in the
+                // onReceive method, detailed below.
+                Log.d(TAG, "###onSuccess");
+            }
+
+            @Override
+            public void onFailure(int reasonCode) {
+                // Code for when the discovery initiation fails goes here.
+                // Alert the user that something went wrong.
+                Log.d(TAG, "###onFailure");
+            }
+        });
+
+
+
+    }
+
+    public void onResume() {
+        super.onResume();
+        receiver = new WiFiDirectBroadcastReceiver(mWifiP2pManager, mChannel, this);
+        registerReceiver(receiver, intentFilter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
+    }
+
+    public NavigationDrawerFragment getNavigationFragment() {
+        return mNavigationDrawerFragment;
     }
 
     @Override
