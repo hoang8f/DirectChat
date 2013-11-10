@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import info.hoang8f.directchat.utils.WifiDirectUtils;
 import jade.android.AgentContainerHandler;
 import jade.android.RuntimeCallback;
 import jade.android.RuntimeService;
@@ -62,35 +63,6 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
 
         //Start JADE main container
         bindService();
-
-        /*
-        mWifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-        if (mWifiP2pManager != null) {
-            mChannel = mWifiP2pManager.initialize(this, this.getMainLooper(), null);
-            if (mChannel == null) {
-                //Failure to set up connection
-                Log.e(TAG, "Failed to set up connection with wifi p2p service");
-                mWifiP2pManager = null;
-            }
-        } else {
-            Log.e(TAG, "mWifiP2pManager is null !");
-        }
-        if (mWifiP2pManager != null) {
-            mWifiP2pManager.setDeviceName(mChannel,
-                    "name",
-                    new WifiP2pManager.ActionListener() {
-                        public void onSuccess() {
-                            Log.d(TAG, " device rename success");
-                        }
-
-                        public void onFailure(int reason) {
-                            Toast.makeText(ChatActivity.this,
-                                    getResources().getString(R.string.wifi_p2p_failed_rename_message),
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    });
-        }
-        */
 
         //  Indicates a change in the Wi-Fi P2P status.
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
@@ -188,22 +160,8 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         item.setChecked(true);
-        switch (item.getItemId()) {
-            case R.id.menu_choice_1:
-                return true;
-            case R.id.menu_choice_2:
-                return true;
-            case R.id.menu_choice_3:
-                return true;
-            case R.id.menu_choice_4:
-                return true;
-            case R.id.menu_choice_5:
-                return true;
-        }
+        WifiDirectUtils.renameDevice(this, mWifiP2pManager, mChannel, item.getTitle().toString());
         return super.onOptionsItemSelected(item);
     }
 
