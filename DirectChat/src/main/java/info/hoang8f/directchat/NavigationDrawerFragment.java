@@ -60,23 +60,7 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
-    public ArrayList<String> getListDevices() {
-        return listDevices;
-    }
-
-    public void setListDevices(ArrayList<String> listDevices) {
-        this.listDevices = listDevices;
-    }
-
     private ArrayList<String> listDevices= new ArrayList<String>();
-
-    public ArrayAdapter<String> getDevicesAdapter() {
-        return devicesAdapter;
-    }
-
-    public void setDevicesAdapter(ArrayAdapter<String> devicesAdapter) {
-        this.devicesAdapter = devicesAdapter;
-    }
 
     private ArrayAdapter<String> devicesAdapter;
 
@@ -115,8 +99,6 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
-        listDevices.add("foo");
-        listDevices.add("bar");
         devicesAdapter = new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_1,
