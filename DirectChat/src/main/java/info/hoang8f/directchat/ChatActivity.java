@@ -201,6 +201,8 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
                 return true;
             case R.id.menu_choice_4:
                 return true;
+            case R.id.menu_choice_5:
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
