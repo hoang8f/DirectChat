@@ -9,9 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
-import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.widget.DrawerLayout;
@@ -23,16 +21,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jade.android.AgentContainerHandler;
 import jade.android.RuntimeCallback;
 import jade.android.RuntimeService;
 import jade.android.RuntimeServiceBinder;
 
-public class ChatActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class ChatActivity extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     public static final String TAG = "ChatActivity";
     private WifiP2pManager mWifiP2pManager;
@@ -58,8 +52,7 @@ public class ChatActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mNavigationDrawerFragment = (NavigationDrawerFragment)getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
         // Set up the drawer.
@@ -114,6 +107,9 @@ public class ChatActivity extends Activity
         mWifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mWifiP2pManager.initialize(this, getMainLooper(), null);
 
+    }
+
+    public void reloadDevices() {
         mWifiP2pManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
 
             @Override
@@ -132,9 +128,6 @@ public class ChatActivity extends Activity
                 Log.d(TAG, "###onFailure");
             }
         });
-
-
-
     }
 
     public void onResume() {
@@ -150,6 +143,7 @@ public class ChatActivity extends Activity
     }
 
     public NavigationDrawerFragment getNavigationFragment() {
+
         return mNavigationDrawerFragment;
     }
 

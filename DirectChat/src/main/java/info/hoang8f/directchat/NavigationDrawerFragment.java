@@ -4,6 +4,9 @@ package info.hoang8f.directchat;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Context;
+import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -11,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +27,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -60,9 +65,9 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
-    private ArrayList<String> listDevices= new ArrayList<String>();
+    private ArrayList<WifiP2pDevice> listDevices = new ArrayList<WifiP2pDevice>();
 
-    private ArrayAdapter<String> devicesAdapter;
+    private DevicesAdapter devicesAdapter;
 
     public NavigationDrawerFragment() {
     }
@@ -99,11 +104,7 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
-        devicesAdapter = new ArrayAdapter<String>(
-                getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                listDevices);
+        devicesAdapter = new DevicesAdapter(getActivity(), listDevices);
         mDrawerListView.setAdapter(devicesAdapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return view;
@@ -248,6 +249,7 @@ public class NavigationDrawerFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.action_reload:
+                ((ChatActivity)getActivity()).reloadDevices();
                 Toast.makeText(getActivity(), "Reload devices list", Toast.LENGTH_SHORT).show();
                 return true;
         }
@@ -255,15 +257,11 @@ public class NavigationDrawerFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void refreshListDevice(ArrayList<String> peer) {
+    public void refreshListDevice(Collection<WifiP2pDevice> peer) {
         listDevices.clear();
         listDevices.addAll(peer);
         devicesAdapter.notifyDataSetChanged();
         mDrawerListView.invalidate();
-    }
-
-    public ListView getDrawerListView() {
-        return mDrawerListView;
     }
 
     /**
