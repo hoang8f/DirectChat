@@ -9,6 +9,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_reload">Reload</string>
+    <string name="action_nickName">Nickname</string>
     <string name="wifi_p2p_failed_rename_message">Rename failed!</string>
 
 </resources>

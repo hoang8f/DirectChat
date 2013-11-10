@@ -1,6 +1,37 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/action_reload"
+    <item
+        android:id="@+id/action_nickname"
         android:title="@string/action_reload"
+        android:icon="@android:drawable/ic_menu_edit"
         android:orderInCategory="100"
         android:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_reload"
+        android:title="@string/action_reload"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_compass"
+        android:showAsAction="always" />
+    <group
+        android:checkableBehavior="single"
+        android:showAsAction="never">
+        <item
+            android:id="@+id/menu_choice_1"
+            android:title="Creation Core" />
+        <item
+            android:id="@+id/menu_choice_2"
+            android:title="Union Square"
+            android:checked="false" />
+        <item
+            android:id="@+id/menu_choice_3"
+            android:title="Core Station" />
+        <item
+            android:id="@+id/menu_choice_4"
+            android:title="Across Wing"
+            android:checked="false" />
+        <item
+            android:id="@+id/menu_choice_5"
+            android:title="Prism House"
+            android:checked="false" />
+    </group>
 </menu>
