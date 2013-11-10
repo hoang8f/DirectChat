@@ -107,6 +107,7 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
         mWifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mWifiP2pManager.initialize(this, getMainLooper(), null);
 
+        reloadDevices();
     }
 
     public void reloadDevices() {
@@ -114,17 +115,11 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
 
             @Override
             public void onSuccess() {
-                // Code for when the discovery initiation is successful goes here.
-                // No services have actually been discovered yet, so this method
-                // can often be left blank.  Code for peer discovery goes in the
-                // onReceive method, detailed below.
                 Log.d(TAG, "###onSuccess");
             }
 
             @Override
             public void onFailure(int reasonCode) {
-                // Code for when the discovery initiation fails goes here.
-                // Alert the user that something went wrong.
                 Log.d(TAG, "###onFailure");
             }
         });
