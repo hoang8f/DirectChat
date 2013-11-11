@@ -1,26 +1,3 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group
-        android:checkableBehavior="single"
-        android:showAsAction="always">
-        <item
-            android:id="@+id/menu_choice_1"
-            android:title="Creation Core" />
-        <item
-            android:id="@+id/menu_choice_2"
-            android:title="Union Square"
-            android:checked="false" />
-        <item
-            android:id="@+id/menu_choice_3"
-            android:title="Core Station" />
-        <item
-            android:id="@+id/menu_choice_4"
-            android:title="Across Wing"
-            android:checked="false" />
-        <item
-            android:id="@+id/menu_choice_5"
-            android:title="Prism House"
-            android:checked="false" />
-    </group>
-
 </menu>

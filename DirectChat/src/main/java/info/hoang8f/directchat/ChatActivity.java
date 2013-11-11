@@ -160,8 +160,6 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        item.setChecked(true);
-        WifiDirectUtils.renameDevice(this, mWifiP2pManager, mChannel, item.getTitle().toString());
         return super.onOptionsItemSelected(item);
     }
 
@@ -248,6 +246,14 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
                 Log.i(TAG, "###Failed to create Main Container");
             }
         });
+    }
+
+    public WifiP2pManager getWifiP2PManager() {
+        return mWifiP2pManager;
+    }
+
+    public WifiP2pManager.Channel getWifiP2PChannel() {
+        return mChannel;
     }
 
 }

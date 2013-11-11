@@ -29,6 +29,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import info.hoang8f.directchat.utils.WifiDirectUtils;
+
 public class NavigationDrawerFragment extends Fragment {
 
     /**
@@ -136,6 +138,16 @@ public class NavigationDrawerFragment extends Fragment {
                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
         ) {
+            @Override
+            public boolean onOptionsItemSelected(MenuItem item) {
+                return super.onOptionsItemSelected(item);
+            }
+
+            @Override
+            public void setDrawerIndicatorEnabled(boolean enable) {
+                super.setDrawerIndicatorEnabled(enable);
+            }
+
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
@@ -246,6 +258,17 @@ public class NavigationDrawerFragment extends Fragment {
             case R.id.action_reload:
                 ((ChatActivity)getActivity()).reloadDevices();
                 Toast.makeText(getActivity(), "Reload devices list", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_nickname:
+                return true;
+            case R.id.menu_choice_1:
+            case R.id.menu_choice_2:
+            case R.id.menu_choice_3:
+            case R.id.menu_choice_4:
+            case R.id.menu_choice_5:
+                item.setChecked(true);
+                ChatActivity chatActivity = (ChatActivity)getActivity();
+                WifiDirectUtils.renameDevice(chatActivity, chatActivity.getWifiP2PManager(), chatActivity.getWifiP2PChannel(), item.getTitle().toString());
                 return true;
         }
 
