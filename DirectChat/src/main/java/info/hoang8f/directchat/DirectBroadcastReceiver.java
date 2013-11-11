@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 
-public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
+public class DirectBroadcastReceiver extends BroadcastReceiver {
     private WifiP2pManager mManager;
     private WifiP2pManager.Channel mChannel;
     private NavigationDrawerFragment navigationDrawerFragment;
@@ -22,7 +22,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
         }
     };
 
-    public WiFiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, ChatActivity activity) {
+    public DirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, ChatActivity activity) {
         this.mChannel = channel;
         this.mManager = manager;
         this.navigationDrawerFragment = activity.getNavigationFragment();

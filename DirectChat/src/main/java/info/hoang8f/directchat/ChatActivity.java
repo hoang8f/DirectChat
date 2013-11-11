@@ -36,7 +36,7 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
     private AgentContainerHandler mainContainerHandler;
     private ServiceConnection serviceConnection;
     private final IntentFilter intentFilter = new IntentFilter();
-    private WiFiDirectBroadcastReceiver receiver;
+    private DirectBroadcastReceiver receiver;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -99,7 +99,7 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
 
     public void onResume() {
         super.onResume();
-        receiver = new WiFiDirectBroadcastReceiver(mWifiP2pManager, mChannel, this);
+        receiver = new DirectBroadcastReceiver(mWifiP2pManager, mChannel, this);
         registerReceiver(receiver, intentFilter);
     }
 
