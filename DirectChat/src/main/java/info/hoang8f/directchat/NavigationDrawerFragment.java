@@ -3,8 +3,12 @@ package info.hoang8f.directchat;
 ;
 import android.app.Activity;
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
+import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -23,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -63,8 +68,10 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mUserLearnedDrawer;
 
     private ArrayList<WifiP2pDevice> listDevices = new ArrayList<WifiP2pDevice>();
-
     private DevicesAdapter devicesAdapter;
+    private ChatActivity mChatActivity;
+    private MenuItem currentDestination;
+    private String currentNickname = "";
 
     public NavigationDrawerFragment() {
     }
@@ -88,13 +95,14 @@ public class NavigationDrawerFragment extends Fragment {
 
         // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
+        mChatActivity = (ChatActivity)getActivity();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
-        mDrawerListView = (ListView)view.findViewById(R.id.list_friend_chat);
+        mDrawerListView = (ListView) view.findViewById(R.id.list_friend_chat);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -249,30 +257,52 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
 
         switch (item.getItemId()) {
             case R.id.action_reload:
-                ((ChatActivity)getActivity()).reloadDevices();
+                ((ChatActivity) getActivity()).reloadDevices();
                 Toast.makeText(getActivity(), "Reload devices list", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_nickname:
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setCancelable(false);
+                builder.setTitle("Set your nick name");
+                final EditText editText = new EditText(getActivity());
+                builder.setView(editText);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        currentNickname = editText.getText().toString();
+                        String broadcastName = currentDestination == null ?currentNickname + "@" + "Creation Core" :currentNickname + "@" + currentDestination.getTitle();
+                        WifiDirectUtils.renameDevice(mChatActivity, mChatActivity.getWifiP2PManager(), mChatActivity.getWifiP2PChannel(), broadcastName);
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                builder.show();
                 return true;
             case R.id.menu_choice_1:
             case R.id.menu_choice_2:
             case R.id.menu_choice_3:
             case R.id.menu_choice_4:
             case R.id.menu_choice_5:
+                currentDestination = item;
                 item.setChecked(true);
-                ChatActivity chatActivity = (ChatActivity)getActivity();
-                WifiDirectUtils.renameDevice(chatActivity, chatActivity.getWifiP2PManager(), chatActivity.getWifiP2PChannel(), item.getTitle().toString());
+                WifiDirectUtils.renameDevice(mChatActivity, mChatActivity.getWifiP2PManager(), mChatActivity.getWifiP2PChannel(), item.getTitle().toString());
                 return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        return super.
+
+                onOptionsItemSelected(item);
     }
 
     public void refreshListDevice(Collection<WifiP2pDevice> peer) {
