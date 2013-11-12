@@ -80,8 +80,6 @@ public class NavigationDrawerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Read in the flag indicating whether or not the user has demonstrated awareness of the
-        // drawer. See PREF_USER_LEARNED_DRAWER for details.
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
 
@@ -90,9 +88,8 @@ public class NavigationDrawerFragment extends Fragment {
             mFromSavedInstanceState = true;
         }
 
-        // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
-        mChatActivity = (ChatActivity)getActivity();
+        mChatActivity = (ChatActivity) getActivity();
     }
 
     @Override
@@ -116,12 +113,6 @@ public class NavigationDrawerFragment extends Fragment {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
     }
 
-    /**
-     * Users of this fragment must call this method to set up the navigation drawer interactions.
-     *
-     * @param fragmentId   The android:id of this fragment in its activity's layout.
-     * @param drawerLayout The DrawerLayout containing this fragment's UI.
-     */
     public void setUp(int fragmentId, DrawerLayout drawerLayout) {
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
@@ -183,8 +174,6 @@ public class NavigationDrawerFragment extends Fragment {
             }
         };
 
-        // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
-        // per the navigation drawer design guidelines.
         if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
             mDrawerLayout.openDrawer(mFragmentContainerView);
         }
@@ -297,7 +286,7 @@ public class NavigationDrawerFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         currentNickname = editText.getText().toString();
-                        String broadcastName = currentDestination == null ?currentNickname + "@" + "Creation Core" :currentNickname + "@" + currentDestination.getTitle();
+                        String broadcastName = currentDestination == null ? currentNickname + "@" + "Creation Core" : currentNickname + "@" + currentDestination.getTitle();
                         WifiDirectUtils.renameDevice(mChatActivity, mChatActivity.getWifiP2PManager(), mChatActivity.getWifiP2PChannel(), broadcastName);
                     }
                 });
@@ -320,9 +309,7 @@ public class NavigationDrawerFragment extends Fragment {
                 return true;
         }
 
-        return super.
-
-                onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
     public void refreshListDevice(Collection<WifiP2pDevice> peer) {

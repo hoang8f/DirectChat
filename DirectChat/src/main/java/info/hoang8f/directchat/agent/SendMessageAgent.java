@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import info.hoang8f.directchat.utils.Constants;
+import info.hoang8f.directchat.utils.WifiDirectUtils;
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
 import jade.core.AID;
@@ -36,6 +37,7 @@ public class SendMessageAgent extends Agent implements ChatInterface {
         // Add initial behaviours
 //        addBehaviour(new SendMessage(this, 3000));
 //        addBehaviour(new OneShotMessage());
+        sendToGroupOwner();
 
         // Activate the GUI
         registerO2AInterface(ChatInterface.class, this);
@@ -84,22 +86,26 @@ public class SendMessageAgent extends Agent implements ChatInterface {
     class OneShotMessage extends OneShotBehaviour {
 
         private String mMessage;
+        private String mAddress;
 
-        public OneShotMessage(String message) {
+        public OneShotMessage(String message, String address) {
             mMessage = message;
+            mAddress = address;
+            if ("".equals(mAddress)) {
+                mAddress = WifiDirectUtils.otherDeviceAddress;
+            }
         }
 
         @Override
         public void action() {
-            Log.i(TAG, "###on Tick");
             ACLMessage message = new ACLMessage(ACLMessage.CONFIRM);
             message.setLanguage(codec.getName());
             String convId = "C-" + myAgent.getLocalName();
             message.setConversationId(convId);
             message.setContent(mMessage);
             AID dummyAid = new AID();
-            dummyAid.setName(agentName + "@" + ipAddress + ":1099/JADE");
-            dummyAid.addAddresses("http://" + ipAddress + ":7778/acc");
+            dummyAid.setName(agentName + "@" + mAddress + ":1099/JADE");
+            dummyAid.addAddresses("http://" + mAddress + ":7778/acc");
             message.addReceiver(dummyAid);
             myAgent.send(message);
             Log.i(TAG, "###Send message:" + message.getContent());
@@ -108,7 +114,11 @@ public class SendMessageAgent extends Agent implements ChatInterface {
     }
 
     public void handleSpoken(String s) {
-        addBehaviour(new OneShotMessage(s));
+        addBehaviour(new OneShotMessage(s, ""));
+    }
+
+    public void sendToGroupOwner() {
+        addBehaviour(new OneShotMessage("discover_ip", WifiDirectUtils.groupOwnerAddress));
     }
 
     public String[] getParticipantNames() {

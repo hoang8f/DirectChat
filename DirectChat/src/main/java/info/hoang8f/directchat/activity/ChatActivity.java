@@ -18,13 +18,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import info.hoang8f.directchat.R;
+import info.hoang8f.directchat.agent.SendMessageAgent;
 import info.hoang8f.directchat.fragment.NavigationDrawerFragment;
 import info.hoang8f.directchat.fragment.PlaceholderFragment;
 import info.hoang8f.directchat.receiver.DirectBroadcastReceiver;
 import jade.android.AgentContainerHandler;
+import jade.android.AgentHandler;
 import jade.android.RuntimeCallback;
 import jade.android.RuntimeService;
 import jade.android.RuntimeServiceBinder;
+import jade.wrapper.AgentController;
+import jade.wrapper.StaleProxyException;
 
 public class ChatActivity extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -36,6 +40,7 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
     private ServiceConnection serviceConnection;
     private final IntentFilter intentFilter = new IntentFilter();
     private DirectBroadcastReceiver receiver;
+    private AgentController mSenderAgentController;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -60,8 +65,8 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        //Start JADE main container
-        bindService();
+//        //Start JADE main container
+//        bindService();
 
         //  Indicates a change in the Wi-Fi P2P status.
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
@@ -155,7 +160,7 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
     /**
      * Create JADE Main Container here
      */
-    private void bindService() {
+    public void bindService() {
         //Check runtime service
         if (runtimeServiceBinder == null) {
             //Create Runtime Service Binder here
@@ -187,6 +192,7 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
                 Log.i(TAG, "###Main-Container created...");
                 Log.i(TAG, "###Container:" + agentContainerHandler.getAgentContainer().getName());
                 Log.i(TAG, "###mainContainerHandler:" + mainContainerHandler);
+                createAgent("agent1", SendMessageAgent.class.getName());
             }
 
             @Override
@@ -194,6 +200,32 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
                 Log.i(TAG, "###Failed to create Main Container");
             }
         });
+    }
+
+    private void createAgent(String name, String className) {
+        if (mainContainerHandler != null) {
+            mainContainerHandler.createNewAgent(name, className, new Object[]{ChatActivity.this}, new RuntimeCallback<AgentHandler>() {
+                @Override
+                public void onSuccess(AgentHandler agentHandler) {
+                    try {
+                        Log.i(TAG, "###Success to create agent: " + agentHandler.getAgentController().getName());
+                        mSenderAgentController = agentHandler.getAgentController();
+                        mSenderAgentController.start();
+                    } catch (StaleProxyException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable throwable) {
+                    Log.i(TAG, "###Failed to created an Agent");
+                    throwable.printStackTrace();
+                }
+            });
+
+        } else {
+            Log.e(TAG, "###Can't get Main-Container to create agent");
+        }
     }
 
     public WifiP2pManager getWifiP2PManager() {
@@ -204,4 +236,11 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
         return mChannel;
     }
 
+    public RuntimeServiceBinder getRuntimeServiceBinder() {
+        return runtimeServiceBinder;
+    }
+
+    public AgentController getSenderAgentController() {
+        return mSenderAgentController;
+    }
 }

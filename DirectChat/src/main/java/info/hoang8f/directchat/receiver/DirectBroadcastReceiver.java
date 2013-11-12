@@ -12,6 +12,7 @@ import android.util.Log;
 
 import info.hoang8f.directchat.activity.ChatActivity;
 import info.hoang8f.directchat.fragment.NavigationDrawerFragment;
+import info.hoang8f.directchat.utils.WifiDirectUtils;
 
 public class DirectBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "DirectBroadcastReceiver";
@@ -65,14 +66,20 @@ public class DirectBroadcastReceiver extends BroadcastReceiver {
                     @Override
                     public void onConnectionInfoAvailable(WifiP2pInfo wifiP2pInfo) {
                         Log.d(TAG, wifiP2pInfo.groupOwnerAddress.getHostAddress());
+                        WifiDirectUtils.groupOwnerAddress = wifiP2pInfo.groupOwnerAddress.getHostAddress();
                     }
                 });
+                //Create main container if need
+                if (mActivity.getRuntimeServiceBinder() == null) {
+                    mActivity.bindService();
+                }
             } else {
                 // It's a disconnect
                 mActivity.getActionBar().setSubtitle("Disconnected");
             }
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
             WifiP2pDevice device = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
+            WifiDirectUtils.deviceAddress = device.deviceAddress;
             mNavigationDrawerFragment.updateThisDevice(device);
         }
     }
