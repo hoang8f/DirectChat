@@ -7,22 +7,23 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import info.hoang8f.directchat.activity.ChatActivity;
 import info.hoang8f.directchat.R;
 
-public class PlaceholderFragment extends Fragment {
-    /**
-     * The fragment argument representing the section number for this
-     * fragment.
-     */
+public class PlaceholderFragment extends Fragment implements View.OnClickListener{
+
     private static final String ARG_SECTION_NUMBER = "section_number";
     private WifiP2pDevice mDevice;
-    /**
-     * Returns a new instance of this fragment for the given section
-     * number.
-     */
+    private TextView mContent;
+    private Button mChatButton;
+    private EditText mChatBox;
+    private ScrollView mScrollView;
+
     public static PlaceholderFragment newInstance(WifiP2pDevice device) {
         PlaceholderFragment fragment = new PlaceholderFragment(device);
         Bundle args = new Bundle();
@@ -39,8 +40,11 @@ public class PlaceholderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
-        TextView textView = (TextView) rootView.findViewById(R.id.chat_content);
-        textView.setText(mDevice.deviceName);
+        mContent = (TextView) rootView.findViewById(R.id.chat_content);
+        mChatButton = (Button) rootView.findViewById(R.id.chat_button);
+        mChatBox = (EditText) rootView.findViewById(R.id.chat_box);
+        mScrollView = (ScrollView) rootView.findViewById(R.id.scroll);
+        mChatButton.setOnClickListener(this);
         getActivity().getActionBar().setSubtitle("Connecting...");
         return rootView;
     }
@@ -49,5 +53,18 @@ public class PlaceholderFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         ((ChatActivity) activity).onSectionAttached(mDevice.deviceName);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.chat_button:
+                String text = mChatBox.getText().toString();
+                if (text!=null && !"".equals(text)) {
+                    mContent.append("\nMe: " + text);
+                    mScrollView.fullScroll(View.FOCUS_DOWN);
+                }
+                return;
+        }
     }
 }
