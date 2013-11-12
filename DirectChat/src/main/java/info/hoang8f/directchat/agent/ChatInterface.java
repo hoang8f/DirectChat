@@ -7,7 +7,7 @@ package info.hoang8f.directchat.agent;
  * @author Michele Izzo - Telecomitalia
  */
 
-public interface SimpleAgentInterface {
+public interface ChatInterface {
 	public void handleSpoken(String s);
 	public String[] getParticipantNames();
     public void onHostChanged(String host);

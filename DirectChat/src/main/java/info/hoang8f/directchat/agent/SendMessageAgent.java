@@ -11,12 +11,11 @@ import jade.content.lang.sl.SLCodec;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
-import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.util.leap.Set;
 import jade.util.leap.SortedSetImpl;
 
-public class SendMessageAgent extends Agent implements SimpleAgentInterface {
+public class SendMessageAgent extends Agent implements ChatInterface {
 
     private static final String TAG = "SendMessageAgent";
     private static final long serialVersionUID = 1594371294421614291L;
@@ -39,7 +38,7 @@ public class SendMessageAgent extends Agent implements SimpleAgentInterface {
 //        addBehaviour(new OneShotMessage());
 
         // Activate the GUI
-        registerO2AInterface(SimpleAgentInterface.class, this);
+        registerO2AInterface(ChatInterface.class, this);
 
         Intent broadcast = new Intent();
         broadcast.setAction("jade.demo.agent.SEND_MESSAGE");
@@ -84,6 +83,12 @@ public class SendMessageAgent extends Agent implements SimpleAgentInterface {
 
     class OneShotMessage extends OneShotBehaviour {
 
+        private String mMessage;
+
+        public OneShotMessage(String message) {
+            mMessage = message;
+        }
+
         @Override
         public void action() {
             Log.i(TAG, "###on Tick");
@@ -91,7 +96,7 @@ public class SendMessageAgent extends Agent implements SimpleAgentInterface {
             message.setLanguage(codec.getName());
             String convId = "C-" + myAgent.getLocalName();
             message.setConversationId(convId);
-            message.setContent("hello! I am from android mobile");
+            message.setContent(mMessage);
             AID dummyAid = new AID();
             dummyAid.setName(agentName + "@" + ipAddress + ":1099/JADE");
             dummyAid.addAddresses("http://" + ipAddress + ":7778/acc");
@@ -103,7 +108,7 @@ public class SendMessageAgent extends Agent implements SimpleAgentInterface {
     }
 
     public void handleSpoken(String s) {
-
+        addBehaviour(new OneShotMessage(s));
     }
 
     public String[] getParticipantNames() {

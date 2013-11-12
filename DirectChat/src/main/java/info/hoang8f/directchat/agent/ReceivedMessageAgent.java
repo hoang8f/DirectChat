@@ -15,7 +15,7 @@ import jade.util.Logger;
 import jade.util.leap.Set;
 import jade.util.leap.SortedSetImpl;
 
-public class ReceivedMessageAgent extends Agent implements SimpleAgentInterface {
+public class ReceivedMessageAgent extends Agent implements ChatInterface {
 
     private static final String TAG = "ReceivedMessage";
     private static final long serialVersionUID = 1594371294421614291L;
@@ -37,7 +37,7 @@ public class ReceivedMessageAgent extends Agent implements SimpleAgentInterface 
         addBehaviour(new ParticipantsManager(this));
 
         // Activate the GUI
-        registerO2AInterface(SimpleAgentInterface.class, this);
+        registerO2AInterface(ChatInterface.class, this);
 
         Intent broadcast = new Intent();
         broadcast.setAction("jade.demo.agent.SEND_MESSAGE");

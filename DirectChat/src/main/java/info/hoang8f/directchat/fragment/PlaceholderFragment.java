@@ -13,8 +13,9 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import info.hoang8f.directchat.activity.ChatActivity;
 import info.hoang8f.directchat.R;
+import info.hoang8f.directchat.activity.ChatActivity;
+import info.hoang8f.directchat.agent.ChatInterface;
 import info.hoang8f.directchat.agent.SendMessageAgent;
 import jade.android.AgentContainerHandler;
 import jade.android.AgentHandler;
@@ -31,6 +32,7 @@ public class PlaceholderFragment extends Fragment implements View.OnClickListene
     private EditText mChatBox;
     private ScrollView mScrollView;
     private AgentContainerHandler mainContainerHandler;
+    private ChatInterface chatInterface;
 
     public static PlaceholderFragment newInstance(AgentContainerHandler containerHandler, WifiP2pDevice device) {
         PlaceholderFragment fragment = new PlaceholderFragment(containerHandler, device);
@@ -74,6 +76,7 @@ public class PlaceholderFragment extends Fragment implements View.OnClickListene
                     mContent.append("\nMe: " + text);
                     mScrollView.fullScroll(View.FOCUS_DOWN);
                     mChatBox.setText("");
+                    chatInterface.handleSpoken(text);
                 }
                 return;
         }
@@ -88,6 +91,7 @@ public class PlaceholderFragment extends Fragment implements View.OnClickListene
                     try {
                         Log.i(TAG, "###Success to create agent: " + agentHandler.getAgentController().getName());
                         agentHandler.getAgentController().start();
+                        chatInterface = agentHandler.getAgentController().getO2AInterface(ChatInterface.class);
                     } catch (StaleProxyException e) {
                         e.printStackTrace();
                     }
