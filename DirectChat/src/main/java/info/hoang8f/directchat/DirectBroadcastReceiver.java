@@ -8,8 +8,13 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.util.Log;
+
+import info.hoang8f.directchat.fragment.NavigationDrawerFragment;
 
 public class DirectBroadcastReceiver extends BroadcastReceiver {
+    private static final String TAG = "DirectBroadcastReceiver";
+
     private WifiP2pManager mManager;
     private WifiP2pManager.Channel mChannel;
     private NavigationDrawerFragment mNavigationDrawerFragment;
@@ -69,7 +74,7 @@ public class DirectBroadcastReceiver extends BroadcastReceiver {
                 mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
                     @Override
                     public void onConnectionInfoAvailable(WifiP2pInfo wifiP2pInfo) {
-                        //TODO
+                        Log.d(TAG, wifiP2pInfo.groupOwnerAddress.getHostAddress());
                     }
                 });
             } else {
@@ -80,8 +85,8 @@ public class DirectBroadcastReceiver extends BroadcastReceiver {
             // that.
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-            mNavigationDrawerFragment.updateThisDevice((WifiP2pDevice) intent.getParcelableExtra(
-                    WifiP2pManager.EXTRA_WIFI_P2P_DEVICE));
+            WifiP2pDevice device = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
+            mNavigationDrawerFragment.updateThisDevice(device);
         }
     }
 

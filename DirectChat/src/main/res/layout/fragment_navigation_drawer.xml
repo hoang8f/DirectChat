@@ -10,5 +10,5 @@
         android:choiceMode="singleChoice"
         android:dividerHeight="0dp"
         android:background="#F0F0F0"
-        tools:context="info.hoang8f.directchat.NavigationDrawerFragment" />
+        tools:context="info.hoang8f.directchat.fragment.NavigationDrawerFragment" />
 </LinearLayout>

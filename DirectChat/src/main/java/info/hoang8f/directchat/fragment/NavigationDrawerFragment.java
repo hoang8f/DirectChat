@@ -1,4 +1,4 @@
-package info.hoang8f.directchat;
+package info.hoang8f.directchat.fragment;
 
 ;
 import android.app.Activity;
@@ -36,6 +36,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import info.hoang8f.directchat.ChatActivity;
+import info.hoang8f.directchat.DevicesAdapter;
+import info.hoang8f.directchat.R;
 import info.hoang8f.directchat.utils.WifiDirectUtils;
 
 public class NavigationDrawerFragment extends Fragment {
@@ -361,5 +364,9 @@ public class NavigationDrawerFragment extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
+    }
+
+    public ArrayList<WifiP2pDevice> getListDevices() {
+        return listDevices;
     }
 }
