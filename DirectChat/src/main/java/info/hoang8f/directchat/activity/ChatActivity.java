@@ -119,7 +119,7 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
         FragmentManager fragmentManager = getFragmentManager();
         WifiP2pDevice device = mNavigationDrawerFragment.getListDevices().get(position);
         fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(device))
+                .replace(R.id.container, PlaceholderFragment.newInstance(mainContainerHandler, device))
                 .commit();
     }
 

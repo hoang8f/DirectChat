@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,26 +15,34 @@ import android.widget.TextView;
 
 import info.hoang8f.directchat.activity.ChatActivity;
 import info.hoang8f.directchat.R;
+import info.hoang8f.directchat.agent.SendMessageAgent;
+import jade.android.AgentContainerHandler;
+import jade.android.AgentHandler;
+import jade.android.RuntimeCallback;
+import jade.wrapper.StaleProxyException;
 
 public class PlaceholderFragment extends Fragment implements View.OnClickListener{
 
+    private static final String TAG = "PlaceholderFragment";
     private static final String ARG_SECTION_NUMBER = "section_number";
     private WifiP2pDevice mDevice;
     private TextView mContent;
     private Button mChatButton;
     private EditText mChatBox;
     private ScrollView mScrollView;
+    private AgentContainerHandler mainContainerHandler;
 
-    public static PlaceholderFragment newInstance(WifiP2pDevice device) {
-        PlaceholderFragment fragment = new PlaceholderFragment(device);
+    public static PlaceholderFragment newInstance(AgentContainerHandler containerHandler, WifiP2pDevice device) {
+        PlaceholderFragment fragment = new PlaceholderFragment(containerHandler, device);
         Bundle args = new Bundle();
 //        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public PlaceholderFragment(WifiP2pDevice device) {
+    public PlaceholderFragment(AgentContainerHandler containerHandler, WifiP2pDevice device) {
         mDevice = device;
+        mainContainerHandler = containerHandler;
     }
 
     @Override
@@ -46,6 +55,7 @@ public class PlaceholderFragment extends Fragment implements View.OnClickListene
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll);
         mChatButton.setOnClickListener(this);
         getActivity().getActionBar().setSubtitle("Connecting...");
+        createAgent("agent1", SendMessageAgent.class.getName());
         return rootView;
     }
 
@@ -63,8 +73,34 @@ public class PlaceholderFragment extends Fragment implements View.OnClickListene
                 if (text!=null && !"".equals(text)) {
                     mContent.append("\nMe: " + text);
                     mScrollView.fullScroll(View.FOCUS_DOWN);
+                    mChatBox.setText("");
                 }
                 return;
+        }
+    }
+
+    private void createAgent(String name, String className) {
+        if (mainContainerHandler != null) {
+            mainContainerHandler.createNewAgent(name, className,
+                    new Object[]{getActivity()}, new RuntimeCallback<AgentHandler>() {
+                @Override
+                public void onSuccess(AgentHandler agentHandler) {
+                    try {
+                        Log.i(TAG, "###Success to create agent: " + agentHandler.getAgentController().getName());
+                        agentHandler.getAgentController().start();
+                    } catch (StaleProxyException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable throwable) {
+                    Log.i(TAG, "###Failed to created an Agent");
+                }
+            });
+
+        } else {
+            Log.e(TAG, "###Can't get Main-Container to create agent");
         }
     }
 }

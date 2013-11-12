@@ -5,6 +5,11 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 import info.hoang8f.directchat.R;
 
 public class WifiDirectUtils {
@@ -36,5 +41,27 @@ public class WifiDirectUtils {
                         }
                     });
         }
+    }
+
+    public String get_arp_IP(String address) {
+        String IPaddress = "";
+        String[] s = address.split(":");
+        int mask = Integer.parseInt(s[4], 16) - 128;
+        String p = Integer.toHexString(mask);
+        String arp_MAC = s[0] + ":" + s[1] + ":" + s[2] + ":" + s[3] + ":" + p
+                + ":" + s[5];
+        File root = new File("/proc/net", "arp");
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(root));
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.contains(arp_MAC)) {
+                    String[] a = line.split(" ");
+                    IPaddress = a[0];
+                }
+            }
+        } catch (IOException e) {
+        }
+        return IPaddress;
     }
 }
