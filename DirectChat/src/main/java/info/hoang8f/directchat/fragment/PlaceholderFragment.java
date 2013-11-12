@@ -39,8 +39,9 @@ public class PlaceholderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
-        TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+        TextView textView = (TextView) rootView.findViewById(R.id.chat_content);
         textView.setText(mDevice.deviceName);
+        getActivity().getActionBar().setSubtitle("Connecting...");
         return rootView;
     }
 
