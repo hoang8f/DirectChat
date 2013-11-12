@@ -1,4 +1,4 @@
-package info.hoang8f.directchat;
+package info.hoang8f.directchat.adapter;
 
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import info.hoang8f.directchat.R;
 
 public class DevicesAdapter extends ArrayAdapter<WifiP2pDevice> {
 

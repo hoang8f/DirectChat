@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import info.hoang8f.directchat.ChatActivity;
+import info.hoang8f.directchat.activity.ChatActivity;
 import info.hoang8f.directchat.R;
 
 public class PlaceholderFragment extends Fragment {

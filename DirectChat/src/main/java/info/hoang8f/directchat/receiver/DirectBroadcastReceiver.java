@@ -1,4 +1,4 @@
-package info.hoang8f.directchat;
+package info.hoang8f.directchat.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 
+import info.hoang8f.directchat.activity.ChatActivity;
 import info.hoang8f.directchat.fragment.NavigationDrawerFragment;
 
 public class DirectBroadcastReceiver extends BroadcastReceiver {

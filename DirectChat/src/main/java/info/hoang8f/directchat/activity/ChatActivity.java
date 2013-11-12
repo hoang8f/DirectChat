@@ -1,8 +1,7 @@
-package info.hoang8f.directchat;
+package info.hoang8f.directchat.activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -15,15 +14,13 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
+import info.hoang8f.directchat.R;
 import info.hoang8f.directchat.fragment.NavigationDrawerFragment;
 import info.hoang8f.directchat.fragment.PlaceholderFragment;
+import info.hoang8f.directchat.receiver.DirectBroadcastReceiver;
 import jade.android.AgentContainerHandler;
 import jade.android.RuntimeCallback;
 import jade.android.RuntimeService;
