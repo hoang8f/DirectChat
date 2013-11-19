@@ -71,7 +71,7 @@ public class NavigationDrawerFragment extends Fragment {
     private DevicesAdapter devicesAdapter;
     private ChatActivity mChatActivity;
     private MenuItem currentDestination;
-    private String currentNickname = "";
+//    private String currentNickname = "";
 
     public NavigationDrawerFragment() {
     }
@@ -200,12 +200,16 @@ public class NavigationDrawerFragment extends Fragment {
         if (mCallbacks != null) {
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
-        connectP2P();
+//        if (WifiDirectUtils.shouldConntect) {
+            connectP2P();
+//        } else {
+//            Toast.makeText(mChatActivity, "Not reconnect",Toast.LENGTH_SHORT).show();
+//        }
     }
 
     private void connectP2P() {
         WifiP2pDevice device = listDevices.get(mCurrentSelectedPosition);
-
+        WifiDirectUtils.otherDeviceMAC = device.deviceAddress;
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = device.deviceAddress;
         config.wps.setup = WpsInfo.PBC;
@@ -285,8 +289,10 @@ public class NavigationDrawerFragment extends Fragment {
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        currentNickname = editText.getText().toString();
-                        String broadcastName = currentDestination == null ? currentNickname + "@" + "Creation Core" : currentNickname + "@" + currentDestination.getTitle();
+                        WifiDirectUtils.currentNickname = editText.getText().toString();
+                        //TODO
+//                        String broadcastName = currentDestination == null ? currentNickname + "@" + "Creation Core" : currentNickname + "@" + currentDestination.getTitle();
+                        String broadcastName = WifiDirectUtils.currentNickname;
                         WifiDirectUtils.renameDevice(mChatActivity, mChatActivity.getWifiP2PManager(), mChatActivity.getWifiP2PChannel(), broadcastName);
                     }
                 });

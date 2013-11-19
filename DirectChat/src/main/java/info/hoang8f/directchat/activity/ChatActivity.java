@@ -41,6 +41,7 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
     private final IntentFilter intentFilter = new IntentFilter();
     private DirectBroadcastReceiver receiver;
     private AgentController mSenderAgentController;
+    private PlaceholderFragment placeholderFragment;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -123,8 +124,9 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
         WifiP2pDevice device = mNavigationDrawerFragment.getListDevices().get(position);
+        placeholderFragment = PlaceholderFragment.newInstance(mainContainerHandler, device);
         fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(mainContainerHandler, device))
+                .replace(R.id.container, placeholderFragment)
                 .commit();
     }
 
@@ -192,7 +194,7 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
                 Log.i(TAG, "###Main-Container created...");
                 Log.i(TAG, "###Container:" + agentContainerHandler.getAgentContainer().getName());
                 Log.i(TAG, "###mainContainerHandler:" + mainContainerHandler);
-                createAgent("agent1", SendMessageAgent.class.getName());
+                createAgent("chat", SendMessageAgent.class.getName());
             }
 
             @Override
@@ -227,6 +229,28 @@ public class ChatActivity extends Activity implements NavigationDrawerFragment.N
             Log.e(TAG, "###Can't get Main-Container to create agent");
         }
     }
+
+    public void showMessage(final String s) {
+        /*
+        if (placeholderFragment == null) {
+            //Create place holder and add to fragment manager
+            FragmentManager fragmentManager = getFragmentManager();
+            WifiP2pDevice device = mNavigationDrawerFragment.getListDevices().get(position);
+            placeholderFragment = PlaceholderFragment.newInstance(mainContainerHandler, device);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, placeholderFragment)
+                    .commit();
+        }
+        */
+
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                placeholderFragment.showMessage(true, s);
+            }
+        });
+    }
+
 
     public WifiP2pManager getWifiP2PManager() {
         return mWifiP2pManager;

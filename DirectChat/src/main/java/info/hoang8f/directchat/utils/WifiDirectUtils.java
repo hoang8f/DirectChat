@@ -1,6 +1,7 @@
 package info.hoang8f.directchat.utils;
 
 import android.content.Context;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -24,6 +25,10 @@ public class WifiDirectUtils {
     public static String deviceAddress = "";
     public static String groupOwnerAddress = "";
     public static String otherDeviceAddress = "";
+    public static String otherDeviceMAC = "";
+    public static WifiP2pDevice otherDevice;
+    public static String currentNickname = "Other";
+//    public static boolean shouldConntect = true;
 
     public static void renameDevice(final Context context, WifiP2pManager mWifiP2pManager, WifiP2pManager.Channel mChannel, String name) {
 

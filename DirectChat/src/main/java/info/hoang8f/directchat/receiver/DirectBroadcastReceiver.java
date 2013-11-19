@@ -73,6 +73,7 @@ public class DirectBroadcastReceiver extends BroadcastReceiver {
                 if (mActivity.getRuntimeServiceBinder() == null) {
                     mActivity.bindService();
                 }
+//                WifiDirectUtils.shouldConntect = false;
             } else {
                 // It's a disconnect
                 mActivity.getActionBar().setSubtitle("Disconnected");

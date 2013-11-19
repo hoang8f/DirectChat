@@ -5,14 +5,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import info.hoang8f.directchat.activity.ChatActivity;
 import info.hoang8f.directchat.utils.Constants;
 import info.hoang8f.directchat.utils.WifiDirectUtils;
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
+import jade.util.Logger;
 import jade.util.leap.Set;
 import jade.util.leap.SortedSetImpl;
 
@@ -24,7 +27,8 @@ public class SendMessageAgent extends Agent implements ChatInterface {
     private Codec codec = new SLCodec();
     private Context context;
     private String ipAddress = "133.19.63.184";
-    private String agentName = "android-agent";
+    private String agentName = "chat";
+    private ChatActivity mChatActivity;
 
     protected void setup() {
         Object[] args = getArguments();
@@ -34,9 +38,12 @@ public class SendMessageAgent extends Agent implements ChatInterface {
             }
         }
 
+        mChatActivity = (ChatActivity)context;
+
         // Add initial behaviours
 //        addBehaviour(new SendMessage(this, 3000));
 //        addBehaviour(new OneShotMessage());
+        addBehaviour(new ParticipantsManager(this));
         sendToGroupOwner();
 
         // Activate the GUI
@@ -92,7 +99,7 @@ public class SendMessageAgent extends Agent implements ChatInterface {
             mMessage = message;
             mAddress = address;
             if ("".equals(mAddress)) {
-                mAddress = WifiDirectUtils.otherDeviceAddress;
+                mAddress = WifiDirectUtils.getArpIPAddress(WifiDirectUtils.otherDeviceMAC);
             }
         }
 
@@ -109,7 +116,40 @@ public class SendMessageAgent extends Agent implements ChatInterface {
             message.addReceiver(dummyAid);
             myAgent.send(message);
             Log.i(TAG, "###Send message:" + message.getContent());
-            exportLog("Send message:" + message.getContent());
+//            exportLog("Send message:" + message.getContent());
+        }
+    }
+
+
+
+    class ParticipantsManager extends CyclicBehaviour {
+        private static final long serialVersionUID = -4845730529175649756L;
+
+        ParticipantsManager(Agent a) {
+            super(a);
+        }
+
+        public void onStart() {
+            //Start cyclic
+        }
+
+        public void action() {
+            // Listening for incomming
+            ACLMessage msg = myAgent.receive();
+            if (msg != null) {
+                try {
+                    //Get message
+                    String message = msg.getContent();
+                    Log.i(TAG, "###Incomming message:" + message);
+                    showOnChat(WifiDirectUtils.currentNickname +": " + message);
+
+                } catch (Exception e) {
+                    Logger.println(e.toString());
+                    e.printStackTrace();
+                }
+            } else {
+                block();
+            }
         }
     }
 
@@ -118,7 +158,7 @@ public class SendMessageAgent extends Agent implements ChatInterface {
     }
 
     public void sendToGroupOwner() {
-        addBehaviour(new OneShotMessage("discover_ip", WifiDirectUtils.groupOwnerAddress));
+//        addBehaviour(new OneShotMessage("discover_ip", WifiDirectUtils.groupOwnerAddress));
     }
 
     public String[] getParticipantNames() {
@@ -134,8 +174,10 @@ public class SendMessageAgent extends Agent implements ChatInterface {
         agentName = name;
     }
 
-    private void exportLog(String log) {
+    private void showOnChat(String message) {
 //        MainActivity mainActivity = (MainActivity)context;
 //        mainActivity.exportLogConsole(log);
+        mChatActivity.showMessage(message);
+
     }
 }

@@ -71,8 +71,7 @@ public class PlaceholderFragment extends Fragment implements View.OnClickListene
             case R.id.chat_button:
                 String text = mChatBox.getText().toString();
                 if (text != null && !"".equals(text)) {
-                    mContent.append("\nMe: " + text);
-                    mScrollView.fullScroll(View.FOCUS_DOWN);
+                    showMessage(false, text);
                     mChatBox.setText("");
                     if (chatInterface == null) {
                         try {
@@ -92,5 +91,14 @@ public class PlaceholderFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    public void showMessage(boolean isIncomming, String s) {
+        if (isIncomming) {
+            mContent.append("\n" + s);
+        } else {
+            mContent.append("\nMe: " + s);
+        }
+        mScrollView.fullScroll(View.FOCUS_DOWN);
+
+    }
 
 }
